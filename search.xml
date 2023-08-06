@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>使用ssh代理加速github</title>
+    <url>/post/speedgit/</url>
+    <content><![CDATA[<h1 id="使用ssh代理加速github"><a href="#使用ssh代理加速github" class="headerlink" title="使用ssh代理加速github"></a>使用ssh代理加速github</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>💡 <strong>背景</strong>：在公司摸鱼时偷偷整了个小项目存在github上，回到寝室兴高采烈地打开自己的小破笔记本准备接着完善项目, 但看着全局代理情况下git clone 27kb &#x2F; s 的龟速，我血压一下子就上来了，于是去学了以下如何提速。（请注意：本方法需要科学上网）</p>
+</blockquote>
+<blockquote>
+<p>本方法学自：<a href="https://zhuanlan.zhihu.com/p/481574024">设置代理解决github被墙 - 知乎 (zhihu.com)</a>,  但该文章中还存有一些可能导致困惑的地方，我将在本篇文章中尽量避免</p>
+</blockquote>
+<hr>
+<h2 id="使用ssh代理加速github的步骤"><a href="#使用ssh代理加速github的步骤" class="headerlink" title="使用ssh代理加速github的步骤"></a>使用ssh代理加速github的步骤</h2><h3 id="1-确认自己梯子的本地代理端口号"><a href="#1-确认自己梯子的本地代理端口号" class="headerlink" title="1. 确认自己梯子的本地代理端口号"></a>1. 确认自己梯子的本地代理端口号</h3><p>以我使用的vray为例，红色箭头所指的为梯子的三个端口号，其中，33612是与代理服务器进行连接的端口，而socks 与 http 是本地的端口号，也是我们接下来需要使用到的端口。</p>
+<p><img src="/%E4%BD%BF%E7%94%A8ssh%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9Fgithub%206eb9a359e50d47358f82c6085dcfc293/Untitled.png" alt="Untitled"></p>
+<h3 id="2-确认自己Git连接执行文件的文件路径"><a href="#2-确认自己Git连接执行文件的文件路径" class="headerlink" title="2.确认自己Git连接执行文件的文件路径"></a>2.确认自己Git连接执行文件的文件路径</h3><p>Git 的连接执行文件是connect.exe</p>
+<p>所在的路径一般为: <code>git的安装目录\mingw64\bin\connect</code></p>
+<p>我将git安装在E盘的App目录中，该路径就为 <code>E:\App\Git\mingw64\bin\connect</code></p>
+<p><img src="/%E4%BD%BF%E7%94%A8ssh%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9Fgithub%206eb9a359e50d47358f82c6085dcfc293/Untitled%201.png" alt="Untitled"></p>
+<h3 id="3-修改ssh的配置"><a href="#3-修改ssh的配置" class="headerlink" title="3.修改ssh的配置"></a>3.修改ssh的配置</h3><p>进入你的.ssh目录，路径一般为 <code>C:\User\你使用的用户名\.ssh</code>， 在这个目录下新建一个config文件（无后缀），将以下内容写入该文件中。 </p>
+<p>其中：</p>
+<p><strong>路径1：</strong> 第二步中确定的路径，如我使用的：<code>E:\APP\Git\mingw64\bin\connect</code></p>
+<p><strong>端口：</strong> 第一步中确认的两个端口中的任意一个，如我使用的为socks端口，<strong>10808</strong></p>
+<p><strong>路径2：</strong>.ssh目录中以id_为前缀的文件的路径，如我的.ssh中该文件名称为id_ed25519, 则我的路径2为 <code>C:\Users\我使用的用户名\.ssh\id_ed25519</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#Windows用户，注意替换你的端口号和connect.exe的路径</span><br><span class="line">ProxyCommand &quot;路径1&quot; -S 127.0.0.1:端口 -a none %h %p</span><br><span class="line"></span><br><span class="line">#MacOS用户用下方这条命令，注意替换你的端口号</span><br><span class="line">#ProxyCommand nc -v -x 127.0.0.1:端口 %h %p</span><br><span class="line"></span><br><span class="line">Host github.com</span><br><span class="line">  User git</span><br><span class="line">  Port 22</span><br><span class="line">  Hostname github.com</span><br><span class="line">  # 注意修改路径为你的路径</span><br><span class="line">  IdentityFile &quot;路径2&quot;</span><br><span class="line">  TCPKeepAlive yes</span><br><span class="line"></span><br><span class="line">Host ssh.github.com</span><br><span class="line">  User git</span><br><span class="line">  Port 443</span><br><span class="line">  Hostname ssh.github.com</span><br><span class="line">  # 注意修改路径为你的路径</span><br><span class="line">  IdentityFile &quot;路径2&quot;</span><br><span class="line">  TCPKeepAlive yes</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-验证"><a href="#4-验证" class="headerlink" title="4.验证"></a>4.验证</h3><p>win+r 并输入cmd 进入控制台， 输入<code>ssh -T git@github.com</code> ，回车，查看结果。返回successful之类的就意味着成功了。</p>
+<p><img src="/%E4%BD%BF%E7%94%A8ssh%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9Fgithub%206eb9a359e50d47358f82c6085dcfc293/Untitled%202.png" alt="速度变成了4MB每秒"></p>
+<p>速度变成了4MB每秒</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/post/phototest/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>vscode配置vim&amp;&amp;vim的快捷键</title>
+    <url>/post/vim-in-vscode/</url>
+    <content><![CDATA[<h2 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h2><p>💡 在组长的推荐下尝试了一把vim，一开始点进<a href="https://www.runoob.com/linux/linux-vim.html">Linux vi&#x2F;vim | 菜鸟教程 (runoob.com)</a>入门时，看着键盘图看得头皮发麻，各种快捷键用的速度还不如鼠标老老实实一下一下点击，但用了两个星期以后大呼过瘾，甚至觉得这个教程里快捷键有些不够，便去找了一下官方文档，</p>
+<h2 id="vscode配置vim："><a href="#vscode配置vim：" class="headerlink" title="vscode配置vim："></a>vscode配置vim：</h2><p>配置过程分两步</p>
+<p>1.在vscode的插件市场中下载vim插件</p>
+<p><img src="/vscode%E9%85%8D%E7%BD%AEvim&&vim%E7%9A%84%E5%BF%AB%E6%8D%B7%E9%94%AE%20486717dfa92e4139900dd419eda76e0e/Untitled.png" alt="Untitled"></p>
+<p>2.在头部导航栏中点击文件，按 文件&#x2F;首选项&#x2F;设置 的顺序来到设置页，然后拖动滚动条跑到页面最底部，点击 ‘在settings.json中编辑’</p>
+<p>3.在settings.json最外部的{}中的最后一个元素后加上以下代码，然后保存，则完成配置，可以使用了。</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;vim.easymotion&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.incsearch&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.useSystemClipboard&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.useCtrlKeys&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.hlsearch&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.insertModeKeyBindings&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;before&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;j&quot;</span><span class="punctuation">,</span> <span class="string">&quot;j&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;after&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;&lt;Esc&gt;&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.normalModeKeyBindingsNonRecursive&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;before&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;&lt;leader&gt;&quot;</span><span class="punctuation">,</span> <span class="string">&quot;d&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;after&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;d&quot;</span><span class="punctuation">,</span> <span class="string">&quot;d&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;before&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;&lt;C-n&gt;&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;commands&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;:nohl&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;before&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;K&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;commands&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;lineBreakInsert&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;silent&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.leader&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;space&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.handleKeys&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;&lt;C-a&gt;&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;&lt;C-f&gt;&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;&lt;C-c&gt;&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vue.splitEditors.layout.left&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">        <span class="string">&quot;script&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;scriptSetup&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;styles&quot;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="vim快捷键"><a href="#vim快捷键" class="headerlink" title="vim快捷键"></a>vim快捷键</h2><p>以下内容为<a href="https://www.runoob.com/linux/linux-vim.html">Linux vi&#x2F;vim | 菜鸟教程 (runoob.com)</a>没有讲到，而我看官方文档后觉得比较常用的快捷键。新手入门还请先从菜鸟教程学习基础。</p>
+<p><strong>标记与跳转</strong></p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>m{a-zA-Z}</td>
+<td>mark current position with mark {a-zA-Z}</td>
+</tr>
+<tr>
+<td>&#96;{a-z}</td>
+<td>go to mark {a-z} within current file</td>
+</tr>
+<tr>
+<td>‘.</td>
+<td>go to the position of the last change in this file</td>
+</tr>
+<tr>
+<td>:marks</td>
+<td>print the active marks</td>
+</tr>
+</tbody></table>
+<p><strong>查找</strong></p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>search forward for the identifier under the cursor</td>
+</tr>
+<tr>
+<td>g*</td>
+<td>like “*”, but also find partial matches</td>
+</tr>
+<tr>
+<td>gd</td>
+<td>goto local declaration of identifier under the cursor</td>
+</tr>
+<tr>
+<td>gD</td>
+<td>goto global declaration of identifier under the cursor</td>
+</tr>
+</tbody></table>
+<p><strong>光标移动</strong></p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%</td>
+<td>find the next brace, bracket, comment, or “#if”&#x2F; “#else”&#x2F;“#endif” in this line and go to its match</td>
+</tr>
+</tbody></table>
+<p><strong>控制滚动条</strong></p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>🔢 CTRL-E</td>
+<td>window N lines downwards (default: 1)</td>
+</tr>
+<tr>
+<td>🔢 CTRL-D</td>
+<td>window N lines Downwards (default: 1&#x2F;2 window)</td>
+</tr>
+<tr>
+<td>🔢 CTRL-U</td>
+<td>window N lines Upwards (default: 1&#x2F;2 window)</td>
+</tr>
+<tr>
+<td>z. or zz</td>
+<td>redraw, current line at center of window</td>
+</tr>
+</tbody></table>
+<p><strong>插入模式（ii）命令</strong></p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CTRL-W</td>
+<td>delete word before the cursor</td>
+</tr>
+</tbody></table>
+]]></content>
+  </entry>
+</search>
