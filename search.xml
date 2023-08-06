@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Hello World</title>
+    <url>/post/phototest/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>使用ssh代理加速github</title>
     <url>/post/speedgit/</url>
     <content><![CDATA[<h1 id="使用ssh代理加速github"><a href="#使用ssh代理加速github" class="headerlink" title="使用ssh代理加速github"></a>使用ssh代理加速github</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
@@ -27,11 +32,6 @@
 <p><img src="/%E4%BD%BF%E7%94%A8ssh%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9Fgithub%206eb9a359e50d47358f82c6085dcfc293/Untitled%202.png" alt="速度变成了4MB每秒"></p>
 <p>速度变成了4MB每秒</p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/post/phototest/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>vscode配置vim&amp;&amp;vim的快捷键</title>
