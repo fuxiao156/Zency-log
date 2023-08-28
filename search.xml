@@ -2,44 +2,121 @@
 <search>
   <entry>
     <title>Hello World</title>
-    <url>/post/phototest/</url>
+    <url>/post/HelloWorld/</url>
     <content><![CDATA[]]></content>
+      <categories>
+        <category>杂物间</category>
+      </categories>
   </entry>
   <entry>
-    <title>使用ssh代理加速github</title>
-    <url>/post/speedgit/</url>
-    <content><![CDATA[<h1 id="使用ssh代理加速github"><a href="#使用ssh代理加速github" class="headerlink" title="使用ssh代理加速github"></a>使用ssh代理加速github</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
-<p>💡 <strong>背景</strong>：在公司摸鱼时偷偷整了个小项目存在github上，回到寝室兴高采烈地打开自己的小破笔记本准备接着完善项目, 但看着全局代理情况下git clone 27kb &#x2F; s 的龟速，我血压一下子就上来了，于是去学了以下如何提速。（请注意：本方法需要科学上网）</p>
+    <title>VeeValidate表单验证</title>
+    <url>/post/fontEnd/VeeValidate/</url>
+    <content><![CDATA[<blockquote>
+<p>前言：element-ui 的表单用起来实在是太僵硬了，组长便让我去看一看VeeValidate的表单验证系统，粗略看了一下官方文档，确实要灵活好用很多，便在此记录一下用法</p>
 </blockquote>
-<blockquote>
-<p>本方法学自：<a href="https://zhuanlan.zhihu.com/p/481574024">设置代理解决github被墙 - 知乎 (zhihu.com)</a>,  但该文章中还存有一些可能导致困惑的地方，我将在本篇文章中尽量避免</p>
-</blockquote>
-<hr>
-<h2 id="使用ssh代理加速github的步骤"><a href="#使用ssh代理加速github的步骤" class="headerlink" title="使用ssh代理加速github的步骤"></a>使用ssh代理加速github的步骤</h2><h3 id="1-确认自己梯子的本地代理端口号"><a href="#1-确认自己梯子的本地代理端口号" class="headerlink" title="1. 确认自己梯子的本地代理端口号"></a>1. 确认自己梯子的本地代理端口号</h3><p>以我使用的vray为例，红色箭头所指的为梯子的三个端口号，其中，33612是与代理服务器进行连接的端口，而socks 与 http 是本地的端口号，也是我们接下来需要使用到的端口。</p>
-<p><img src="/%E4%BD%BF%E7%94%A8ssh%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9Fgithub%206eb9a359e50d47358f82c6085dcfc293/Untitled.png" alt="Untitled"></p>
-<h3 id="2-确认自己Git连接执行文件的文件路径"><a href="#2-确认自己Git连接执行文件的文件路径" class="headerlink" title="2.确认自己Git连接执行文件的文件路径"></a>2.确认自己Git连接执行文件的文件路径</h3><p>Git 的连接执行文件是connect.exe</p>
-<p>所在的路径一般为: <code>git的安装目录\mingw64\bin\connect</code></p>
-<p>我将git安装在E盘的App目录中，该路径就为 <code>E:\App\Git\mingw64\bin\connect</code></p>
-<p><img src="/%E4%BD%BF%E7%94%A8ssh%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9Fgithub%206eb9a359e50d47358f82c6085dcfc293/Untitled%201.png" alt="Untitled"></p>
-<h3 id="3-修改ssh的配置"><a href="#3-修改ssh的配置" class="headerlink" title="3.修改ssh的配置"></a>3.修改ssh的配置</h3><p>进入你的.ssh目录，路径一般为 <code>C:\User\你使用的用户名\.ssh</code>， 在这个目录下新建一个config文件（无后缀），将以下内容写入该文件中。 </p>
-<p>其中：</p>
-<p><strong>路径1：</strong> 第二步中确定的路径，如我使用的：<code>E:\APP\Git\mingw64\bin\connect</code></p>
-<p><strong>端口：</strong> 第一步中确认的两个端口中的任意一个，如我使用的为socks端口，<strong>10808</strong></p>
-<p><strong>路径2：</strong>.ssh目录中以id_为前缀的文件的路径，如我的.ssh中该文件名称为id_ed25519, 则我的路径2为 <code>C:\Users\我使用的用户名\.ssh\id_ed25519</code></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#Windows用户，注意替换你的端口号和connect.exe的路径</span><br><span class="line">ProxyCommand &quot;路径1&quot; -S 127.0.0.1:端口 -a none %h %p</span><br><span class="line"></span><br><span class="line">#MacOS用户用下方这条命令，注意替换你的端口号</span><br><span class="line">#ProxyCommand nc -v -x 127.0.0.1:端口 %h %p</span><br><span class="line"></span><br><span class="line">Host github.com</span><br><span class="line">  User git</span><br><span class="line">  Port 22</span><br><span class="line">  Hostname github.com</span><br><span class="line">  # 注意修改路径为你的路径</span><br><span class="line">  IdentityFile &quot;路径2&quot;</span><br><span class="line">  TCPKeepAlive yes</span><br><span class="line"></span><br><span class="line">Host ssh.github.com</span><br><span class="line">  User git</span><br><span class="line">  Port 443</span><br><span class="line">  Hostname ssh.github.com</span><br><span class="line">  # 注意修改路径为你的路径</span><br><span class="line">  IdentityFile &quot;路径2&quot;</span><br><span class="line">  TCPKeepAlive yes</span><br></pre></td></tr></table></figure>
+<h1 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h1><ul>
+<li>无需使用v-model将input与变量绑定（但想的话也可以），而是使用v-bind与对应的field绑定。最后直接通过form的value读取。</li>
+</ul>
+<p>💡 导入<br><code>npm install --save vee-validate@next</code><br><code>import &#123; Form, Field, ErrorMessage &#125; from &#39;vee-validate&#39;;</code></p>
+<p>官方文档：<a href="https://vee-validate.logaretm.com/v4/">VeeValidate: Painless Vue.js forms (logaretm.com)</a></p>
+<h1 id="基础用法示例"><a href="#基础用法示例" class="headerlink" title="基础用法示例"></a><strong>基础用法示例</strong></h1><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">lang</span>=<span class="string">&quot;ts&quot;</span> <span class="attr">setup</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">import</span> &#123; <span class="title class_">Form</span>, <span class="title class_">Field</span>, <span class="title class_">ErrorMessage</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;vee-validate&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> <span class="title function_">validateEmail</span> = (<span class="params">value: any</span>) =&gt; &#123;</span></span><br><span class="line"><span class="language-javascript">	<span class="keyword">return</span> <span class="regexp">/@/</span>.<span class="title function_">test</span>(value) ? <span class="literal">true</span> : <span class="string">&#x27;邮箱格式错误&#x27;</span></span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> <span class="title function_">isRequired</span>=(<span class="params">value:string</span>)=&gt; &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">if</span> (value &amp;&amp; value.<span class="title function_">trim</span>()) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> <span class="literal">true</span>;</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">return</span> <span class="string">&#x27;你没通过捏&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> <span class="title function_">onSubmit</span> = (<span class="params">values</span>) =&gt; &#123;</span></span><br><span class="line"><span class="language-javascript">	<span class="comment">//values是一个对象，存有填好的表单的值，key是元素的name。</span></span></span><br><span class="line"><span class="language-javascript">	<span class="variable language_">console</span>.<span class="title function_">log</span>(values)</span></span><br><span class="line"><span class="language-javascript">	<span class="title function_">alert</span>(<span class="string">&#x27;验证通过时执行&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- &lt;Form&gt;包裹整个表单，&lt;Field&gt;包裹表单中的一个字段 --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- @submit在所有Field都返回true时才触发 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">Form</span> @<span class="attr">submit</span>=<span class="string">&quot;onSubmit&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">:rules</span>=<span class="string">&quot;isRequired&quot;</span> <span class="attr">:validate-on-input</span>=<span class="string">&quot;true&quot;</span> #<span class="attr">default</span>=<span class="string">&quot;&#123; errorMessage, field &#125;&quot;</span>&gt;</span></span><br><span class="line">			<span class="comment">&lt;!-- field来自&lt;Field&gt;的v-slot, 意味着值的绑定与事件的绑定。在数据不方便双向绑定，如file时，或想自己配置绑定事件时不使用v-bind写法，具体请看官方文档 --&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">input</span> <span class="attr">v-bind</span>=<span class="string">&quot;field&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> /&gt;</span></span><br><span class="line">			<span class="comment">&lt;!-- errMessage即为校验失败后显示的信息 --&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; errorMessage &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">Field</span>&gt;</span></span><br><span class="line">		</span><br><span class="line">		<span class="comment">&lt;!-- onsubmit会监听内部每一个button的点击，点击时触发内部所有Field的验证 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">button</span>&gt;</span>提交<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">button</span>&gt;</span>提交<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">Form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="4-验证"><a href="#4-验证" class="headerlink" title="4.验证"></a>4.验证</h3><p>win+r 并输入cmd 进入控制台， 输入<code>ssh -T git@github.com</code> ，回车，查看结果。返回successful之类的就意味着成功了。</p>
-<p><img src="/%E4%BD%BF%E7%94%A8ssh%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9Fgithub%206eb9a359e50d47358f82c6085dcfc293/Untitled%202.png" alt="速度变成了4MB每秒"></p>
-<p>速度变成了4MB每秒</p>
-]]></content>
+<h1 id="使用自定义输入框"><a href="#使用自定义输入框" class="headerlink" title="使用自定义输入框"></a><strong>使用自定义输入框</strong></h1><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Form</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">:rules</span>=<span class="string">&quot;&#123; email: true &#125;&quot;</span>  #<span class="attr">default</span>=<span class="string">&quot;&#123; errorMessage, value &#125;&quot;</span>&gt;</span></span><br><span class="line">		//自定义组件推荐使用update:modelValue事件实现与Field的绑定</span><br><span class="line">		<span class="tag">&lt;<span class="name">CustomInput</span> <span class="attr">:modelValue</span>=<span class="string">&quot;value&quot;</span> @<span class="attr">update:modelValue</span>=<span class="string">&quot;handleChange&quot;</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">Field</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="验证规则绑定"><a href="#验证规则绑定" class="headerlink" title="验证规则绑定"></a><strong>验证规则绑定</strong></h1><h2 id="声明验证规则"><a href="#声明验证规则" class="headerlink" title="声明验证规则"></a>声明验证规则</h2><p>验证规则有两种，一是直接使用函数，还有一种叫validator(个人感觉和函数区别也不大)</p>
+<h3 id="使用函数"><a href="#使用函数" class="headerlink" title="使用函数"></a>使用函数</h3><p>声明一个函数，返回值是 bool或string 。return true 时errormessage为空， return false则errormessage为默认值， return string 则将该string赋值给errormessage。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">isRequired</span> = (<span class="params">value</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (value &amp;&amp; value.<span class="title function_">trim</span>()) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&#x27;This is required&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之后使用:rules绑定</p>
+<p><code>&lt;Field name=&quot;field&quot; :rules=&quot;isRequired&quot; /&gt;</code></p>
+<h3 id="使用validator"><a href="#使用validator" class="headerlink" title="使用validator"></a>使用validator</h3><p>声明一个validator, 类似函数</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineRule &#125; <span class="keyword">from</span> <span class="string">&#x27;vee-validate&#x27;</span>;</span><br><span class="line"><span class="title function_">defineRule</span>(<span class="string">&#x27;required&#x27;</span>, <span class="function">(<span class="params">value :string</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!value || !value.<span class="property">length</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;This field is required&#x27;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//需要参数的validator</span></span><br><span class="line"><span class="title function_">defineRule</span>(<span class="string">&#x27;minLength&#x27;</span>, <span class="function">(<span class="params">value, [limit]</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// The field is empty so it should pass</span></span><br><span class="line">  <span class="keyword">if</span> (!value || !value.<span class="property">length</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (value.<span class="property">length</span> &lt; limit) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`This field must be at least <span class="subst">$&#123;limit&#125;</span> characters`</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="title function_">defineRule</span>(<span class="string">&#x27;minMax&#x27;</span>, <span class="function">(<span class="params">value, [min, max]</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// The field is empty so it should pass</span></span><br><span class="line">  <span class="keyword">if</span> (!value || !value.<span class="property">length</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (value.<span class="property">length</span> &lt; min) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`This field must be at least <span class="subst">$&#123;min&#125;</span> characters`</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (value.<span class="property">length</span> &gt; max) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`This field must be at most <span class="subst">$&#123;max&#125;</span> characters`</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>而后用:rules绑定</p>
+<p><code>绑定单个&lt;Field name=&quot;username3&quot; :rules=&quot;&#39;resquired&#39;&quot; &gt;</code></p>
+<p><code>绑定多个&lt;Field name=&quot;username3&quot; :rules=&quot;&#39;resquired|email&#39;&quot; &gt;</code></p>
+<p><code>绑定带参数的validator &lt;Field name=&quot;username3&quot; :rules=&quot;&#39;resquired|minLength:8&#39;&quot; &gt;</code></p>
+<p><code>绑定带多个参数的validator &lt;Field name=&quot;username3&quot; :rules=&quot;&#39;minMax:5,8|resquired&#39;&quot; &gt;</code></p>
+<h2 id="绑定规则"><a href="#绑定规则" class="headerlink" title="绑定规则"></a>绑定规则</h2><p>除每个field单独绑定外，还可定义一个schema控制所有rules后通过name分配rule</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">&lt;!-- 给<span class="title class_">Form</span>绑定schema --&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">Form</span> @<span class="attr">submit</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">:validation-schema</span>=<span class="string">&quot;schema&quot;</span> <span class="attr">v-slot</span>=<span class="string">&quot;&#123; errors &#125;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>&#123;&#123; errors.email &#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">type</span>=<span class="string">&quot;password&quot;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>&#123;&#123; errors.password &#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">button</span>&gt;</span>Submit<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">Form</span>&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span> <span class="attr">setup</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="keyword">import</span> &#123; <span class="title class_">Form</span>, <span class="title class_">Field</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;vee-validate&#x27;</span>;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"><span class="keyword">const</span> schema = &#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="attr">email</span>: <span class="string">&#x27;required|email&#x27;</span>,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="attr">password</span>: <span class="string">&#x27;required|minLength:8&#x27;</span>,</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">&#125;;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<h1 id="验证时机的设置"><a href="#验证时机的设置" class="headerlink" title="验证时机的设置"></a><strong>验证时机的设置</strong></h1><h2 id="单一Field验证："><a href="#单一Field验证：" class="headerlink" title="单一Field验证："></a>单一Field验证：</h2><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">:rules</span>=<span class="string">&quot;&#123; email: true &#125;&quot;</span> <span class="attr">:validateOnInput</span>=<span class="string">&quot;true&quot;</span> #<span class="attr">default</span>=<span class="string">&quot;&#123; errorMessage, field &#125;&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">v-bind</span>=<span class="string">&quot;field&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; errorMessage &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Field</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>与时机有关的prop</th>
+<th>默认值</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>validateOnMount</td>
+<td>false</td>
+<td></td>
+</tr>
+<tr>
+<td>validateOnInput</td>
+<td>false</td>
+<td></td>
+</tr>
+<tr>
+<td>validateOnChange</td>
+<td>true</td>
+<td></td>
+</tr>
+<tr>
+<td>validateOnBlur</td>
+<td>true</td>
+<td></td>
+</tr>
+<tr>
+<td>validateOnModelUpdate</td>
+<td>true</td>
+<td></td>
+</tr>
+<tr>
+<td>bails</td>
+<td>true</td>
+<td>绑定多个验证规则时，有一个验证规则未通过，直接结束验证，而不再继续验证其他规则</td>
+</tr>
+</tbody></table>
+<h2 id="全表验证："><a href="#全表验证：" class="headerlink" title="全表验证："></a>全表验证：</h2><p>除最后的提交之外，可能还有其他地方也需要进行全表验证，VeeValidate为此提供了validate模块</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 导入validate模块 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">Form</span> @<span class="attr">submit</span>=<span class="string">&quot;onSubmit&quot;</span> #<span class="attr">default</span>=<span class="string">&quot;&#123; validate &#125;&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;username1&quot;</span> <span class="attr">:rules</span>=<span class="string">&quot;isRequired&quot;</span> #<span class="attr">default</span>=<span class="string">&quot;&#123; errorMessage, field&#125;&quot;</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">input</span> <span class="attr">v-bind</span>=<span class="string">&quot;field&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; errorMessage &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">Field</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;username2&quot;</span> <span class="attr">:rules</span>=<span class="string">&quot;isRequired&quot;</span>  #<span class="attr">default</span>=<span class="string">&quot;&#123; errorMessage, field &#125;&quot;</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">input</span> <span class="attr">v-bind</span>=<span class="string">&quot;field&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; errorMessage &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">Field</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 使用validate模块 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">div</span> @<span class="attr">click</span>=<span class="string">&quot;validate()&quot;</span>&gt;</span>11111<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">Form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="状态管理（trigger）"><a href="#状态管理（trigger）" class="headerlink" title="状态管理（trigger）"></a>状态管理（trigger）</h1><h2 id="Form"><a href="#Form" class="headerlink" title="Form"></a>Form</h2><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">&lt;!-- 验证状态管理 --&gt;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">Form</span> @<span class="attr">submit</span>=<span class="string">&quot;onSubmit&quot;</span> #<span class="attr">default</span>=<span class="string">&quot;&#123; meta &#125;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">	<span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;&#123; meta &#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">Form</span>&gt;</span></span></span><br><span class="line"><span class="comment">//渲染结果&#123; &quot;initialValues&quot;: &#123;&#125;, &quot;touched&quot;: false, &quot;pending&quot;: false, &quot;valid&quot;: false, &quot;dirty&quot;: false &#125;</span></span><br><span class="line">meta.<span class="property">value</span>.<span class="property">initialValues</span>; <span class="comment">//一个对象，包含所有字段的初始值，key是字段的name</span></span><br><span class="line">meta.<span class="property">value</span>.<span class="property">touched</span>;<span class="comment">//是否有字段被focus过，并且已经blur</span></span><br><span class="line">meta.<span class="property">value</span>.<span class="property">pending</span>; <span class="comment">//是否有字段还在验证中</span></span><br><span class="line">meta.<span class="property">value</span>.<span class="property">valid</span>; <span class="comment">//是否全部通过验证</span></span><br><span class="line">meta.<span class="property">value</span>.<span class="property">dirty</span>; <span class="comment">//是否有字段更新</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 提交状态管理 --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- isSubmitting在提交时值为true，提交完成后值变为false --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">v-form</span> <span class="attr">:validation-schema</span>=<span class="string">&quot;schema&quot;</span> @<span class="attr">submit</span>=<span class="string">&quot;onSubmit&quot;</span> <span class="attr">v-slot</span>=<span class="string">&quot;&#123; isSubmitting &#125;&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Field"><a href="#Field" class="headerlink" title="Field"></a>Field</h2><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> <span class="attr">type</span>=<span class="string">&quot;email&quot;</span> <span class="attr">:rules</span>=<span class="string">&quot;validateEmail&quot;</span> <span class="attr">v-slot</span>=<span class="string">&quot;&#123; field, meta &#125;&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">v-bind</span>=<span class="string">&quot;field&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">pre</span>&gt;</span>&#123;&#123; meta &#125;&#125;<span class="tag">&lt;/<span class="name">pre</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--渲染出的结果为&#123; &quot;touched&quot;: true, &quot;pending&quot;: false, &quot;valid&quot;: false, &quot;validated&quot;: false, &quot;dirty&quot;: true &#125;--&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Field</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="表单的提交"><a href="#表单的提交" class="headerlink" title="表单的提交"></a>表单的提交</h1><blockquote>
+<p>You will rarely need to access the form values inside the template, but it is there if you ever need it. What’s interesting is that vee-validate follows the assumption that most likely you will need the form values at the submission phase.<br>您很少需要在提交这一步骤之外使用表单值，基于这个假设，vee-validate只在提交阶段提供表单值。但如果您有需要，请额外使用v-model绑定你想要的元素</p>
+</blockquote>
+<p>⬆️源自VeeValidate官方文档</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">lang</span>=<span class="string">&quot;ts&quot;</span> <span class="attr">setup</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">import</span> &#123; <span class="title class_">Form</span>, <span class="title class_">Field</span>, <span class="title class_">ErrorMessage</span>&#125; <span class="keyword">from</span> <span class="string">&#x27;vee-validate&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript"><span class="comment">//values为表单内部的值，是一个对象，key为field的name</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> <span class="title function_">onSubmit</span> = (<span class="params">values</span>) =&gt; &#123;</span></span><br><span class="line"><span class="language-javascript">	<span class="variable language_">console</span>.<span class="title function_">log</span>(values);</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"><span class="comment">//value为用户填入的值，results存有验证是否通过的信息，errors为错误信息</span></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> <span class="title function_">onInvalidSubmit</span>=(<span class="params">&#123;values, errors, results&#125;</span>)=&gt;&#123;</span></span><br><span class="line"><span class="language-javascript">	<span class="variable language_">console</span>.<span class="title function_">log</span>(values);</span></span><br><span class="line"><span class="language-javascript">	<span class="variable language_">console</span>.<span class="title function_">log</span>(errors);</span></span><br><span class="line"><span class="language-javascript">	<span class="variable language_">console</span>.<span class="title function_">log</span>(results);</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"><span class="keyword">const</span> <span class="title function_">isRequired</span>=(<span class="params">value:string</span>)=&gt; &#123;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">if</span> (value &amp;&amp; value.<span class="title function_">trim</span>()) &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">return</span> <span class="literal">true</span>;</span></span><br><span class="line"><span class="language-javascript">  &#125;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">return</span> <span class="string">&#x27;你没通过捏&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 在所有验证都通过时触发submit事件，其handler默认带表单值为参数。有验证不通过时触发invalid</span></span><br><span class="line"><span class="comment">Submit事件 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">Form</span> @<span class="attr">submit</span>=<span class="string">&quot;onSubmit&quot;</span> @<span class="attr">invalid-submit</span>=<span class="string">&quot;onInvalidSubmit&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;username1&quot;</span> <span class="attr">:rules</span>=<span class="string">&quot;isRequired&quot;</span> #<span class="attr">default</span>=<span class="string">&quot;&#123; field&#125;&quot;</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">input</span> <span class="attr">v-bind</span>=<span class="string">&quot;field&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">Field</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;username2&quot;</span> <span class="attr">:rules</span>=<span class="string">&quot;isRequired&quot;</span>  #<span class="attr">default</span>=<span class="string">&quot;&#123; errorMessage, field &#125;&quot;</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">input</span> <span class="attr">v-bind</span>=<span class="string">&quot;field&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; errorMessage &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">Field</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- Form自动监听其间button的点击事件，点击则对所有field进行验证 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">button</span>&gt;</span>一个按钮<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">Form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h1><h2 id="绑定初始值"><a href="#绑定初始值" class="headerlink" title="绑定初始值"></a>绑定初始值</h2><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 仍可以使用v-model来绑定初始值 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">lang</span>=<span class="string">&quot;ts&quot;</span> <span class="attr">setup</span>&gt;</span><span class="language-handlebars"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">...</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"><span class="comment">&lt;!-- 定义初始值 --&gt;</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">const formValues =&#123;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">	username1:&#x27;test1&#x27;,</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">	username2:&#x27;test2&#x27;,</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">&#125;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"></span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 给Form绑定initialValues --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">Form</span> @<span class="attr">submit</span>=<span class="string">&quot;onSubmit&quot;</span> <span class="attr">:initialValues</span>=<span class="string">&quot;formValues&quot;</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;username1&quot;</span> <span class="attr">:rules</span>=<span class="string">&quot;isRequired&quot;</span> #<span class="attr">default</span>=<span class="string">&quot;&#123; errorMessage, field&#125;&quot;</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">input</span> <span class="attr">v-bind</span>=<span class="string">&quot;field&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; errorMessage &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">Field</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;username2&quot;</span> <span class="attr">:rules</span>=<span class="string">&quot;isRequired&quot;</span>  #<span class="attr">default</span>=<span class="string">&quot;&#123; errorMessage, field &#125;&quot;</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">input</span> <span class="attr">v-bind</span>=<span class="string">&quot;field&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; errorMessage &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">Field</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">button</span>&gt;</span>1212<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">Form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="错误信息的显示"><a href="#错误信息的显示" class="headerlink" title="错误信息的显示"></a>错误信息的显示</h2><p><code>&lt;*ErrorMessage* *name*=&quot;field&quot; *as*=&quot;div&quot; /&gt;</code></p>
+<p>可以通过修改as的值，将错误信息改为自定义组件</p>
+<h2 id="更改值"><a href="#更改值" class="headerlink" title="更改值"></a>更改值</h2><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 行内函数更改 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Form</span> <span class="attr">v-slot</span>=<span class="string">&quot;&#123; setFieldValue, setValues &#125;&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span>  /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ErrorMessage</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span>  /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ErrorMessage</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span> @<span class="attr">click</span>=<span class="string">&quot;setFieldValue(&#x27;email&#x27;, &#x27;test&#x27;)&quot;</span>&gt;</span>Set Field Value<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&quot;button&quot;</span> @<span class="attr">click</span>=<span class="string">&quot;setValues(&#123; email: &#x27;test&#x27;, password: &#x27;test12&#x27; &#125;)&quot;</span>&gt;</span></span><br><span class="line">    Set Multiple Values</span><br><span class="line">  <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Form</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- js中使用 ----------------------------------------------------------------------&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">lang</span>=<span class="string">&quot;ts&quot;</span> <span class="attr">setup</span>&gt;</span><span class="language-handlebars"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">...</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">const numval = ref(5)</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"><span class="comment">&lt;!--获取ref--&gt;</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">const myForm = ref()</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"><span class="comment">&lt;!-- 更改一个值 --&gt;</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">function changevalue()&#123;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">	myForm.value.setFieldValue(&#x27;username1&#x27;,numval.value++)</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">&#125;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"><span class="comment">&lt;!-- 更改多个值 --&gt;</span></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">function changevalues()&#123;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">	myForm.value.setValues(</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">		&#123;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">			username1: 1,</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">			username2: 2</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">		&#125;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">	)</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">&#125;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"></span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 获取ref --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">Form</span> @<span class="attr">submit</span>=<span class="string">&quot;onSubmit&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;myForm&quot;</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;username1&quot;</span> #<span class="attr">default</span>=<span class="string">&quot;&#123; errorMessage, field&#125;&quot;</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">input</span> <span class="attr">v-bind</span>=<span class="string">&quot;field&quot;</span> <span class="attr">type</span>=<span class="string">&quot;number&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; errorMessage &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">Field</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">Field</span> <span class="attr">name</span>=<span class="string">&quot;username2&quot;</span>  #<span class="attr">default</span>=<span class="string">&quot;&#123; errorMessage, field &#125;&quot;</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">input</span> <span class="attr">v-bind</span>=<span class="string">&quot;field&quot;</span> <span class="attr">type</span>=<span class="string">&quot;number&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; errorMessage &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">Field</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">div</span> @<span class="attr">click</span>=<span class="string">&quot;changevalue&quot;</span>&gt;</span>111<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">div</span> @<span class="attr">click</span>=<span class="string">&quot;changevalues&quot;</span>&gt;</span>222<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">Form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2>]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>-表单验证</tag>
+      </tags>
   </entry>
   <entry>
     <title>vscode配置vim&amp;&amp;vim的快捷键</title>
-    <url>/post/vim-in-vscode/</url>
+    <url>/post/forAll/vim-in-vscode/</url>
     <content><![CDATA[<h2 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h2><p>💡 在组长的推荐下尝试了一把vim，一开始点进<a href="https://www.runoob.com/linux/linux-vim.html">Linux vi&#x2F;vim | 菜鸟教程 (runoob.com)</a>入门时，看着键盘图看得头皮发麻，各种快捷键用的速度还不如鼠标老老实实一下一下点击，但用了两个星期以后大呼过瘾，甚至觉得这个教程里快捷键有些不够，便去找了一下官方文档，</p>
 <h2 id="vscode配置vim："><a href="#vscode配置vim：" class="headerlink" title="vscode配置vim："></a>vscode配置vim：</h2><p>配置过程分两步</p>
 <p>1.在vscode的插件市场中下载vim插件</p>
-<p><img src="/vscode%E9%85%8D%E7%BD%AEvim&&vim%E7%9A%84%E5%BF%AB%E6%8D%B7%E9%94%AE%20486717dfa92e4139900dd419eda76e0e/Untitled.png" alt="Untitled"></p>
+<p><img src="https://img-blog.csdnimg.cn/2e8a3c545a224c0d83be4d3bda485c85.png#pic_center" alt="Untitled"></p>
 <p>2.在头部导航栏中点击文件，按 文件&#x2F;首选项&#x2F;设置 的顺序来到设置页，然后拖动滚动条跑到页面最底部，点击 ‘在settings.json中编辑’</p>
 <p>3.在settings.json最外部的{}中的最后一个元素后加上以下代码，然后保存，则完成配置，可以使用了。</p>
 <figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;vim.easymotion&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.incsearch&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.useSystemClipboard&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.useCtrlKeys&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.hlsearch&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.insertModeKeyBindings&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;before&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;j&quot;</span><span class="punctuation">,</span> <span class="string">&quot;j&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;after&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;&lt;Esc&gt;&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.normalModeKeyBindingsNonRecursive&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;before&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;&lt;leader&gt;&quot;</span><span class="punctuation">,</span> <span class="string">&quot;d&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;after&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;d&quot;</span><span class="punctuation">,</span> <span class="string">&quot;d&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;before&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;&lt;C-n&gt;&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;commands&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;:nohl&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;before&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;K&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;commands&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;lineBreakInsert&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;silent&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.leader&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;space&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vim.handleKeys&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;&lt;C-a&gt;&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;&lt;C-f&gt;&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;&lt;C-c&gt;&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;vue.splitEditors.layout.left&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">        <span class="string">&quot;script&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;scriptSetup&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;styles&quot;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
@@ -66,8 +143,16 @@
 <td>go to the position of the last change in this file</td>
 </tr>
 <tr>
+<td>‘“</td>
+<td>go to the position when last editing this file</td>
+</tr>
+<tr>
 <td>:marks</td>
 <td>print the active marks</td>
+</tr>
+<tr>
+<td>🔢 %</td>
+<td>goto line N percentage down in the file; N must be given, otherwise it is the % command</td>
 </tr>
 </tbody></table>
 <p><strong>查找</strong></p>
@@ -107,6 +192,47 @@
 <td>%</td>
 <td>find the next brace, bracket, comment, or “#if”&#x2F; “#else”&#x2F;“#endif” in this line and go to its match</td>
 </tr>
+<tr>
+<td>‘&gt;</td>
+<td>go to the end of the (previous) Visual area</td>
+</tr>
+<tr>
+<td>‘&lt;</td>
+<td>go to the start of the (previous) Visual area</td>
+</tr>
+<tr>
+<td>f{char}</td>
+<td>to the Nth occurrence of {char} to the right</td>
+</tr>
+<tr>
+<td>F{char}</td>
+<td>to the Nth occurrence of {char} to the left</td>
+</tr>
+<tr>
+<td>t{char}</td>
+<td>till before the Nth occurrence of {char} to the right</td>
+</tr>
+<tr>
+<td>T{char}</td>
+<td>till before the Nth occurrence of {char} to the left</td>
+</tr>
+</tbody></table>
+<p><strong>普通模式的插入</strong></p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>K</td>
+<td>上方插入一空行而不进入输入模式</td>
+</tr>
+<tr>
+<td>cc</td>
+<td>删除该行至行首且切换为输入模式</td>
+</tr>
 </tbody></table>
 <p><strong>控制滚动条</strong></p>
 <table>
@@ -121,6 +247,10 @@
 <td>window N lines downwards (default: 1)</td>
 </tr>
 <tr>
+<td>🔢 CTRL-Y</td>
+<td>window N lines upwards (default: 1)</td>
+</tr>
+<tr>
 <td>🔢 CTRL-D</td>
 <td>window N lines Downwards (default: 1&#x2F;2 window)</td>
 </tr>
@@ -129,8 +259,81 @@
 <td>window N lines Upwards (default: 1&#x2F;2 window)</td>
 </tr>
 <tr>
+<td>zt</td>
+<td>redraw, current line at top of window</td>
+</tr>
+<tr>
 <td>z. or zz</td>
 <td>redraw, current line at center of window</td>
+</tr>
+<tr>
+<td>zb</td>
+<td>redraw, current line at bottom of window</td>
+</tr>
+<tr>
+<td>🔢 zh</td>
+<td>scroll screen N characters to the right</td>
+</tr>
+<tr>
+<td>🔢 zl</td>
+<td>scroll screen N characters to the left</td>
+</tr>
+<tr>
+<td>🔢 zH</td>
+<td>scroll screen half a screenwidth to the right</td>
+</tr>
+<tr>
+<td>🔢 zL</td>
+<td>scroll screen half a screenwidth to the left</td>
+</tr>
+</tbody></table>
+<p><strong>视图模式（ CTRL-V ）命令</strong></p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>aw</td>
+<td>Select a word(不包括符号)</td>
+</tr>
+<tr>
+<td>aW</td>
+<td>Select a word(包括符号)</td>
+</tr>
+<tr>
+<td>ap</td>
+<td>Select “a paragraph”(上下两个空行之间，)</td>
+</tr>
+<tr>
+<td>a[]&lt;&gt;’’{}””</td>
+<td>选择对应的一整个块</td>
+</tr>
+<tr>
+<td>i[]&lt;&gt;’’{}””</td>
+<td>选择块中的内容</td>
+</tr>
+<tr>
+<td>at</td>
+<td>Select “a tag block”</td>
+</tr>
+<tr>
+<td>it</td>
+<td>Select “inner tag block” (from <aaa> to </aaa>)</td>
+</tr>
+<tr>
+<td>I</td>
+<td>insert the same text in front of all the selected lines</td>
+</tr>
+<tr>
+<td>A</td>
+<td>append the same text after all the selected lines</td>
+</tr>
+<tr>
+<td>c</td>
+<td>Change each of the selected lines with the entered text</td>
 </tr>
 </tbody></table>
 <p><strong>插入模式（ii）命令</strong></p>
@@ -145,7 +348,157 @@
 <td>CTRL-W</td>
 <td>delete word before the cursor</td>
 </tr>
+<tr>
+<td>CTRL-E</td>
+<td>insert the character from below the cursor</td>
+</tr>
+<tr>
+<td>CTRL-Y</td>
+<td>insert the character from above the cursor</td>
+</tr>
+<tr>
+<td>CTRL-A</td>
+<td>inser previously inserted text</td>
+</tr>
+<tr>
+<td>CTRL-@</td>
+<td>insert previously inserted text and stop Insert mode</td>
+</tr>
+<tr>
+<td>CTRL-U</td>
+<td>delete all entered characters in the current line before the cursor</td>
+</tr>
+</tbody></table>
+<p><strong>普通模式的命令</strong></p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>q{a-Z}</td>
+<td>record typed characters into register {a-z}</td>
+</tr>
+<tr>
+<td>q</td>
+<td>stop recording</td>
+</tr>
+<tr>
+<td>🔢 @{a-z}</td>
+<td>execute the contents of register {a-z} (N times)</td>
+</tr>
+<tr>
+<td>🔢 @@</td>
+<td>repeat previous @{a-z} (N times)</td>
+</tr>
+<tr>
+<td>“{char}</td>
+<td>use register {char} for the next delete, yank, or put</td>
+</tr>
+<tr>
+<td>“*</td>
+<td>use register * to access system clipboard</td>
+</tr>
+<tr>
+<td>:reg</td>
+<td>show the contents of all registers</td>
+</tr>
+<tr>
+<td>:reg {arg}</td>
+<td>show the contents of registers mentioned in {arg}</td>
+</tr>
+</tbody></table>
+<p><strong>基本命令</strong></p>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>gp</td>
+<td>like p, but leave cursor after the new text</td>
+</tr>
+<tr>
+<td>🔢 CTRL-A</td>
+<td>add N to the number at or after the cursor</td>
+</tr>
+<tr>
+<td>🔢 CTRL-X</td>
+<td>subtract N from the number at or after the cursor</td>
+</tr>
 </tbody></table>
 ]]></content>
+      <categories>
+        <category>综合</category>
+      </categories>
+      <tags>
+        <tag>vim</tag>
+        <tag>VScode</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>前端性能优化</title>
+    <url>/post/fontEnd/fontEndImprove/</url>
+    <content><![CDATA[<h1 id="防抖"><a href="#防抖" class="headerlink" title="防抖"></a>防抖</h1><p>概念：避免在短时间内重复触发同一个事件</p>
+<p>依赖安装<code>npm i lodash</code></p>
+<p>导入<code>import _ from &#39;lodash’</code></p>
+<p>代码示例：</p>
+<figure class="highlight tsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">//随便定义一个函数：</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">fun</span>= (<span class="params">str</span>)=&gt;&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(str);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//声明一个debounce变量</span></span><br><span class="line"><span class="keyword">const</span> fun1 = _.<span class="title function_">debounce</span>(fun,<span class="number">500</span>)</span><br><span class="line"><span class="comment">//其中，fun是一个函数，在fun1的声明中fun不带参数，此后，就把 fun1当fan用</span></span><br><span class="line"><span class="comment">//如：&lt;button @click=&quot;fun1(&#x27;11111&#x27;)&quot;&gt;&lt;/button&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="axios取消请求"><a href="#axios取消请求" class="headerlink" title="axios取消请求"></a>axios取消请求</h1><p>概念：当用户需频繁发送请求，并且新请求的数据会覆盖旧请求时，应该在新请求发送时取消旧请求</p>
+<p>axios仓库页面：<a href="https://github.com/axios/axios#cancellation">axios&#x2F;axios: Promise based HTTP client for the browser and node.js (github.com)</a>，取消为Cancellation部分</p>
+<p>底层原理挺复杂的（原理讲解见<a href="https://zhuanlan.zhihu.com/p/432732779#:~:text=%2F%2F%20Axios%2Flib%2Fadapters%2Fxhr.js%20%2F%2F...%20if%20%28config.cancelToken%20%7C%7C%20config.signal%29%20%7B,%3F%20onCanceled%28%29%20%3A%20config.signal.addEventListener%28%27abort%27%2C%20onCanceled%29%3B%20%7D%20%7D%20%2F%2F">这次终于弄懂Axios是如何中断请求了</a>），但实际用起来很简单。只需new 一个AbortController实例后，在要取消请求时调用这个实例的abort方法即可。</p>
+<p>代码示例：</p>
+<figure class="highlight tsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">//请求控制器</span></span><br><span class="line"><span class="keyword">const</span> controller = <span class="title function_">ref</span>(<span class="keyword">new</span> <span class="title class_">AbortController</span>())</span><br><span class="line"></span><br><span class="line"><span class="comment">//关联搜索框</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">handleInputList</span> = (<span class="params">val</span>) =&gt; &#123;</span><br><span class="line">		<span class="comment">//取消旧请求</span></span><br><span class="line">    controller.<span class="property">value</span>.<span class="title function_">abort</span>()</span><br><span class="line">		<span class="comment">//创建新控制器</span></span><br><span class="line">    controller.<span class="property">value</span> = <span class="keyword">new</span> <span class="title class_">AbortController</span>()</span><br><span class="line">		<span class="comment">//getMatchJobLists是一个封装了的axios方法,将controller.value.signal作为参数传入</span></span><br><span class="line">    <span class="title function_">getMatchJobLists</span>(&#123; <span class="attr">job</span>: val, <span class="attr">isSearch</span>: <span class="number">1</span> &#125;, controller.<span class="property">value</span>.<span class="property">signal</span>).<span class="title function_">then</span>(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">        isInputSearchArr.<span class="property">value</span> = []</span><br><span class="line">        <span class="keyword">let</span> industry = <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="keyword">let</span> direction = <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> (res.<span class="property">code</span> === <span class="number">200</span>) &#123;</span><br><span class="line">            res.<span class="property">data</span>.<span class="title function_">forEach</span>(<span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (item.<span class="property">industry</span>) &#123;</span><br><span class="line">                    industry = item.<span class="property">industry</span></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                item.<span class="property">direction</span>.<span class="title function_">forEach</span>(<span class="function">(<span class="params">item2</span>) =&gt;</span> &#123;</span><br><span class="line">                    <span class="keyword">if</span> (item2.<span class="property">direction</span>) &#123;</span><br><span class="line">                        direction = item2.<span class="property">direction</span></span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    item2.<span class="property">jobs</span>.<span class="title function_">forEach</span>(<span class="function">(<span class="params">item3</span>) =&gt;</span> &#123;</span><br><span class="line">                        isInputSearchArr.<span class="property">value</span>.<span class="title function_">push</span>(&#123;</span><br><span class="line">                            <span class="attr">id</span>: item3.<span class="property">id</span>,</span><br><span class="line">                            <span class="attr">name</span>: item3.<span class="property">name</span>,</span><br><span class="line">                            industry,</span><br><span class="line">                            direction,</span><br><span class="line">                        &#125;)</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该示例是一个类似浏览器的搜索下拉框，用户每次输入后都向服务器请求用户搜索的内容 ，用户打字较快的话，会在短时间内进行多次请求，而其中只有最后一次请求的结果有意义，因此可以通过取消之前的请求来提升性能。</p>
+<p>代码段中的getMatchJobLists是一个封装了的axios方法，其定义如下：</p>
+<figure class="highlight tsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> getMatchJobLists = (<span class="attr">params</span>: <span class="built_in">any</span>, <span class="attr">signal</span>: <span class="title class_">GenericAbortSignal</span>): <span class="function"><span class="params">any</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">request</span>(&#123;</span><br><span class="line">        <span class="attr">url</span>: <span class="string">`/match_job_lists`</span>,</span><br><span class="line">        <span class="attr">method</span>: <span class="string">&quot;get&quot;</span>,</span><br><span class="line">        signal,</span><br><span class="line">        params,</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>前端</tag>
+        <tag>性能</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用ssh代理加速github</title>
+    <url>/post/forAll/speedgit/</url>
+    <content><![CDATA[<h1 id="使用ssh代理加速github"><a href="#使用ssh代理加速github" class="headerlink" title="使用ssh代理加速github"></a>使用ssh代理加速github</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>💡 <strong>背景</strong>：在公司摸鱼时偷偷整了个小项目存在github上，回到寝室兴高采烈地打开自己的小破笔记本准备接着完善项目, 但看着全局代理情况下git clone 27kb &#x2F; s 的龟速，我血压一下子就上来了，于是去学了以下如何提速。（请注意：本方法需要科学上网）</p>
+</blockquote>
+<blockquote>
+<p>本方法学自：<a href="https://zhuanlan.zhihu.com/p/481574024">设置代理解决github被墙 - 知乎 (zhihu.com)</a>,  但该文章中还存有一些可能导致困惑的地方，我将在本篇文章中尽量避免</p>
+</blockquote>
+<hr>
+<h2 id="使用ssh代理加速github的步骤"><a href="#使用ssh代理加速github的步骤" class="headerlink" title="使用ssh代理加速github的步骤"></a>使用ssh代理加速github的步骤</h2><h3 id="1-确认自己梯子的本地代理端口号"><a href="#1-确认自己梯子的本地代理端口号" class="headerlink" title="1. 确认自己梯子的本地代理端口号"></a>1. 确认自己梯子的本地代理端口号</h3><p>以我使用的vray为例，红色箭头所指的为梯子的三个端口号，其中，33612是与代理服务器进行连接的端口，而socks 与 http 是本地的端口号，也是我们接下来需要使用到的端口。</p>
+<p><img src="https://img-blog.csdnimg.cn/05fb991394904388a68ef53b06cf8727.png#pic_center" alt="Untitled"></p>
+<h3 id="2-确认自己Git连接执行文件的文件路径"><a href="#2-确认自己Git连接执行文件的文件路径" class="headerlink" title="2.确认自己Git连接执行文件的文件路径"></a>2.确认自己Git连接执行文件的文件路径</h3><p>Git 的连接执行文件是connect.exe</p>
+<p>所在的路径一般为: <code>git的安装目录\mingw64\bin\connect</code></p>
+<p>我将git安装在E盘的App目录中，该路径就为 <code>E:\App\Git\mingw64\bin\connect</code></p>
+<p><img src="https://img-blog.csdnimg.cn/382c55b0fad84b13a3986172e4814184.png#pic_center" alt="Untitled"></p>
+<h3 id="3-修改ssh的配置"><a href="#3-修改ssh的配置" class="headerlink" title="3.修改ssh的配置"></a>3.修改ssh的配置</h3><p>进入你的.ssh目录，路径一般为 <code>C:\User\你使用的用户名\.ssh</code>， 在这个目录下新建一个config文件（无后缀），将以下内容写入该文件中。 </p>
+<p>其中：</p>
+<p><strong>路径1：</strong> 第二步中确定的路径，如我使用的：<code>E:\APP\Git\mingw64\bin\connect</code></p>
+<p><strong>端口：</strong> 第一步中确认的两个端口中的任意一个，如我使用的为socks端口，<strong>10808</strong></p>
+<p><strong>路径2：</strong>.ssh目录中以id_为前缀的文件的路径，如我的.ssh中该文件名称为id_ed25519, 则我的路径2为 <code>C:\Users\我使用的用户名\.ssh\id_ed25519</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#Windows用户，注意替换你的端口号和connect.exe的路径</span><br><span class="line">ProxyCommand &quot;路径1&quot; -S 127.0.0.1:端口 -a none %h %p</span><br><span class="line"></span><br><span class="line">#MacOS用户用下方这条命令，注意替换你的端口号</span><br><span class="line">#ProxyCommand nc -v -x 127.0.0.1:端口 %h %p</span><br><span class="line"></span><br><span class="line">Host github.com</span><br><span class="line">  User git</span><br><span class="line">  Port 22</span><br><span class="line">  Hostname github.com</span><br><span class="line">  # 注意修改路径为你的路径</span><br><span class="line">  IdentityFile &quot;路径2&quot;</span><br><span class="line">  TCPKeepAlive yes</span><br><span class="line"></span><br><span class="line">Host ssh.github.com</span><br><span class="line">  User git</span><br><span class="line">  Port 443</span><br><span class="line">  Hostname ssh.github.com</span><br><span class="line">  # 注意修改路径为你的路径</span><br><span class="line">  IdentityFile &quot;路径2&quot;</span><br><span class="line">  TCPKeepAlive yes</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-验证"><a href="#4-验证" class="headerlink" title="4.验证"></a>4.验证</h3><p>win+r 并输入cmd 进入控制台， 输入<code>ssh -T git@github.com</code> ，回车，查看结果。返回successful之类的就意味着成功了。</p>
+<p><img src="https://img-blog.csdnimg.cn/97e936ef9bc74634808a2ed171339fb6.png#pic_center" alt="速度变成了4MB每秒"></p>
+<p>速度变成了4MB每秒</p>
+]]></content>
+      <categories>
+        <category>综合</category>
+      </categories>
+      <tags>
+        <tag>git</tag>
+        <tag>加速</tag>
+      </tags>
   </entry>
 </search>
