@@ -1,0 +1,264 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>逆向微信-实现微信多开 | Zency</title><meta name="author" content="Zency"><meta name="copyright" content="Zency"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="在吾爱破解网上看到一个小白向的微信逆向过程，之前一直对逆向有点兴趣，因此跟着教程实操了一次，在此记录一下。  准备工具x64dbg 微信3.9.10.27 （不同版本的具体操作存在一定区别，但大致思路相同） 参考https:&#x2F;&#x2F;www.52pojie.cn&#x2F;thread-1951224-1-1.html 具体过程1. 找到一个切入点参考博客中，博主先调查出Windows下微信实现多开限制的方式—">
+<meta property="og:type" content="article">
+<meta property="og:title" content="逆向微信-实现微信多开">
+<meta property="og:url" content="http://example.com/post/pojie/mutilWechat/index.html">
+<meta property="og:site_name" content="☀️ SunnyCandy&#39;s blog 🍬">
+<meta property="og:description" content="在吾爱破解网上看到一个小白向的微信逆向过程，之前一直对逆向有点兴趣，因此跟着教程实操了一次，在此记录一下。  准备工具x64dbg 微信3.9.10.27 （不同版本的具体操作存在一定区别，但大致思路相同） 参考https:&#x2F;&#x2F;www.52pojie.cn&#x2F;thread-1951224-1-1.html 具体过程1. 找到一个切入点参考博客中，博主先调查出Windows下微信实现多开限制的方式—">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://picabstract-preview-ftn.weiyun.com/ftn_pic_abs_v3/ef13bd09fbadbe819ea9f06c4bf2d852c8ef5bc653bfd009f1f5e4e80a4f33c6dcaff217a9e67a029a16c589a3207378?pictype=scale&from=30013&version=3.3.3.3&fname=back19.jpg&size=750">
+<meta property="article:published_time" content="2024-08-09T05:03:51.000Z">
+<meta property="article:modified_time" content="2024-10-08T02:42:52.338Z">
+<meta property="article:author" content="Zency">
+<meta property="article:tag" content="微信小程序">
+<meta property="article:tag" content="破解">
+<meta property="article:tag" content="逆向">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://picabstract-preview-ftn.weiyun.com/ftn_pic_abs_v3/ef13bd09fbadbe819ea9f06c4bf2d852c8ef5bc653bfd009f1f5e4e80a4f33c6dcaff217a9e67a029a16c589a3207378?pictype=scale&from=30013&version=3.3.3.3&fname=back19.jpg&size=750"><link rel="shortcut icon" href="/asset/img/head.jpg"><link rel="canonical" href="http://example.com/post/pojie/mutilWechat/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Zency","link":"链接: ","source":"来源: ☀️ SunnyCandy's blog 🍬","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '逆向微信-实现微信多开',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-10-08 10:42:52'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name=referrer content= no-referrer><link rel="stylesheet" href="/asset/css/custom.css"><link rel="stylesheet" href="/asset/css/comment.css"><link rel="stylesheet" href="//at.alicdn.com/t/c/font_4199517_aslsyrov4hi.css"  media="defer" onload="this.media='all'"><span id="fps"></span><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/animate.min.css" media="print" onload="this.media='screen'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+document.addEventListener('pjax:send', () => {
+  Pace.restart()
+})
+</script><link rel="stylesheet" href="https://fastly.jsdelivr.net/gh/xlenco/JS-X@main/pace.js/pace.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js/pace.min.js"></script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/asset/img/head.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">22</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">25</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 🏠首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><span> 📑文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><span> ⏳时间轴</span></a></li><li><a class="site-page child" href="/tags/"><span> 🔖标签</span></a></li><li><a class="site-page child" href="/categories/"><span> 🗂️分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><span> ⚒️工具箱</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/toolweb/"><span> 🧭网站导航</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><span> 🥯社交</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><span> 🔗友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><span> 🍬个人</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/myvoice/"><span> 💭碎碎念</span></a></li><li><a class="site-page child" href="/about/"><span> ☀️关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background: transparent"><nav id="nav"><span id="blog-info"><a href="/" title="☀️ SunnyCandy's blog 🍬"><span class="site-name">☀️ SunnyCandy's blog 🍬</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span> 🏠首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><span> 📑文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><span> ⏳时间轴</span></a></li><li><a class="site-page child" href="/tags/"><span> 🔖标签</span></a></li><li><a class="site-page child" href="/categories/"><span> 🗂️分类</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><span> ⚒️工具箱</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/toolweb/"><span> 🧭网站导航</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><span> 🥯社交</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><span> 🔗友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><span> 🍬个人</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/myvoice/"><span> 💭碎碎念</span></a></li><li><a class="site-page child" href="/about/"><span> ☀️关于</span></a></li></ul></div></div></div><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></nav><div id="post-info"><h1 class="post-title">逆向微信-实现微信多开</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-08-09T05:03:51.000Z" title="发表于 2024-08-09 13:03:51">2024-08-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-10-08T02:42:52.338Z" title="更新于 2024-10-08 10:42:52">2024-10-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%80%86%E5%90%91/">逆向</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="逆向微信-实现微信多开"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>在吾爱破解网上看到一个小白向的微信逆向过程，之前一直对逆向有点兴趣，因此跟着教程实操了一次，在此记录一下。</p>
+</blockquote>
+<h1 id="准备工具"><a href="#准备工具" class="headerlink" title="准备工具"></a>准备工具</h1><p>x64dbg</p>
+<p>微信3.9.10.27 （不同版本的具体操作存在一定区别，但大致思路相同）</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1951224-1-1.html">https://www.52pojie.cn/thread-1951224-1-1.html</a></p>
+<h1 id="具体过程"><a href="#具体过程" class="headerlink" title="具体过程"></a>具体过程</h1><h2 id="1-找到一个切入点"><a href="#1-找到一个切入点" class="headerlink" title="1. 找到一个切入点"></a>1. 找到一个切入点</h2><p>参考博客中，博主先调查出Windows下微信实现多开限制的方式——调用Windows的CreateMutex api来构建一个互斥体，之后便是通过追踪CreateMutex函数来打下第一个断点。</p>
+<h2 id="2-基于切入点分析"><a href="#2-基于切入点分析" class="headerlink" title="2.基于切入点分析"></a>2.基于切入点分析</h2><ol>
+<li>打开微信，不用登陆</li>
+<li>打开xdbg64,  附加微信</li>
+</ol>
+<p><img src="https://i-blog.csdnimg.cn/direct/fb9a088139af4900b9f7fe7be809b748.png" alt="Untitled"></p>
+<ol start="3">
+<li><p>先搜索wechat 选择 “附加”</p>
+<p> <img src="https://i-blog.csdnimg.cn/direct/122a47f23e114151ab4e7cae1f89e5c8.png" alt="Untitled"></p>
+<p> 附加后，x64dbg就可以对微信进行调试</p>
+</li>
+<li><p>重新打开微信，无需登陆。这一步是为了使得之后x64dbg所操作的微信会进入多开限制相关的代码段中</p>
+</li>
+<li><p>选择断点页面, 删除所有默认断点</p>
+<p> <img src="https://i-blog.csdnimg.cn/direct/c9cae9c876e445679d7c0fa25774d42f.png" alt="Untitled"></p>
+</li>
+<li><p>选择cpu页面 CTRL + G 跳转搜索函数CreateMutex，有四个结果</p>
+<p> <img src="https://i-blog.csdnimg.cn/direct/d051922432714ac0a573f9dc7c95613e.png" alt="Untitled"></p>
+</li>
+<li><p>一个一个选择，并跳转到对应位置后，发现来源于同一处，都打一个断点</p>
+<p> <img src="https://i-blog.csdnimg.cn/direct/8910ba99b82440989d58bf61d9e59324.png" alt="Untitled"></p>
+</li>
+<li><p>先点击循环箭头重启调试微信</p>
+<p> <img src="https://i-blog.csdnimg.cn/direct/0cf3dca55ae9491ab75ee2e8cdbb574e.png" alt="Untitled"></p>
+</li>
+<li><p>多次点击运行或者按快捷键F9，直到到达我们设定断点处。（之所以按多次，是因为在运行过程中，会自动创建一些断点）</p>
+<p> <img src="https://i-blog.csdnimg.cn/direct/5a9b57bcdf404e0db37bfe8c14009a4b.png" alt="Untitled"></p>
+<p> 到达设定的断点处</p>
+<p> <img src="https://i-blog.csdnimg.cn/direct/d54849cc97e54e769f7f59cbc7bc5709.png" alt="Untitled"></p>
+<p> 可以看到，是直接停在第四个红点处，这意味着微信调用的是CreateMutexW接口，而没有用另外三个。</p>
+</li>
+<li><p>接下来开始按F8, 一步一步执行程序，直到出现多开限制导致的现象——即第4步中打开的微信窗口被唤起</p>
+<p><img src="https://i-blog.csdnimg.cn/direct/ee4ca5ee9ef547d2b2abfa14a9c42b43.png" alt="Untitled"></p>
+<p>执行到图中标记的这一句时（该行右侧的“打开窗口”为我自己注释所得，并非原来就有），右边的微信窗口自动唤起，此时我们就能确定多开限制相关的代码段的大致范围，从 CreateMutexW 所在的代码行，到窗口被唤起时，所执行到的代码行。</p>
+</li>
+<li><p>接下来要收缩代码范围，根据模块进行收缩</p>
+<p>窗口的左上角会显示模块的名称，如微信窗口被唤起时，所在的模块为wechatwin.dll</p>
+<p><img src="https://i-blog.csdnimg.cn/direct/453b913b81e442d99fe8fa308bfe5981.png" alt="Untitled"></p>
+<p>而根据之前的图，CreateMutex断点所在模块为kernel32.dll, 在执行过程中，还加载过名为ntdll.dll等的其他模块，kernel32.dll与ntdll.dll模块等是系统模块（判断的方式请见第15步），不应该进行修改，否则可能会影响到其他软件甚至系统的使用，而wechatwin.dll是只有微信用的模块（判断的方式请见第15步），修改时无需担心影响到其他软件。因此我们需要重新执行一次8、9、10步，实时观察所在模块，找到第一次进入到wechatwin.dll是在哪一行，给该行加入注释，如下图</p>
+<p><img src="https://i-blog.csdnimg.cn/direct/9d0a3a85ba494c17ba61319b923c06e4.png" alt="Untitled"></p>
+<p>可以看到，我们将范围缩短到了32行。</p>
+</li>
+<li><p>接下来就按F8逐步执行这个范围里的语句，并打注释记录条件跳转语句（je与jne）是否进行了跳转，如图，其中，“有不跳”意味着：在已经有一个微信窗口的情况下，该语句不会进行跳转</p>
+<p><img src="https://i-blog.csdnimg.cn/direct/6cf529780f5e4a1494ccc609628a0ccf.png" alt="Untitled"></p>
+</li>
+<li><p>关闭第4步中打开的微信窗口，则之后x64dbg所启动的微信就不会进入导致多开限制相关的代码段，重新测试第9步范围内的条件跳转语句，并进行标注。其中，“无不跳”意为：“在无其他微信窗口的情况下，该语句不会进行跳转”，“无跳”意为：“在无其他微信窗口的情况下，该语句会进行跳转”</p>
+<p><img src="https://i-blog.csdnimg.cn/direct/4d27f890d29544c8921e1ebc6b2ec7cd.png" alt="Untitled"></p>
+<p>在第二个条件跳转语句，“已有微信窗口”与“无其他微信窗口”的行为就有了区分；但无法排除剩下两个跳转语句会产生影响的可能性，因此对剩下的两个跳转语句打上断点，不断按“F9”，观察在微信窗口出现之前，这两个断点是否会激活。</p>
+<p><img src="https://i-blog.csdnimg.cn/direct/dfa7802ce2e94418a0e75c3db9601c9e.png" alt="Untitled"></p>
+<p>在该过程中，断点并未激活，因此可以排除剩下两个条件跳转语句对结果会起影响的可能性。</p>
+</li>
+<li><p>修改跳转条件，将jne修改为jmp</p>
+<p><img src="https://i-blog.csdnimg.cn/direct/f948ab5c32674bb68910a1f9ea062168.png" alt="Untitled"></p>
+<p><img src="https://i-blog.csdnimg.cn/direct/87351e9f98d4480fba537cc991876a8f.png" alt="Untitled"></p>
+</li>
+<li><p>构建补丁</p>
+<p><img src="https://i-blog.csdnimg.cn/direct/c64d925b2cfc4d3bb0c20f2f027aaa64.png" alt="Untitled"></p>
+<p><img src="https://i-blog.csdnimg.cn/direct/2bea24d730704c9290a5c24e82d4ae0d.png" alt="Untitled"></p>
+<p><img src="https://i-blog.csdnimg.cn/direct/28551ea2b27146fb91e455349e496e07.png" alt="Untitled"></p>
+<p>点击修补文件后，弹出的文件管理器所在的路径即为当前模块所在的路径，可以根据该路径判断模块是系统模块还是单个应用的模块。将文件名设置为 模块名+New.dll，进行保存。</p>
+</li>
+<li><p>备份源文件，启用补丁</p>
+<p>打开文件管理器，进入文件保存路径，将原来的模块（即WeChatWin.dll）命名为WeChatWin.dll.bak, 用于出问题时软件恢复，再将我们保存的文件（即WeChatWinNew.dll）命名为WeChatWin.dll。</p>
+</li>
+<li><p>重启微信，可以进行多开，预期目标完成</p>
+<p><img src="https://i-blog.csdnimg.cn/direct/f539f5a34e814f518ae19294ad5dce04.png" alt="Untitled"></p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Zency</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/post/pojie/mutilWechat/">http://example.com/post/pojie/mutilWechat/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">☀️ SunnyCandy's blog 🍬</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/">微信小程序</a><a class="post-meta__tags" href="/tags/%E7%A0%B4%E8%A7%A3/">破解</a><a class="post-meta__tags" href="/tags/%E9%80%86%E5%90%91/">逆向</a></div><div class="post_share"><div class="social-share" data-image="https://picabstract-preview-ftn.weiyun.com/ftn_pic_abs_v3/ef13bd09fbadbe819ea9f06c4bf2d852c8ef5bc653bfd009f1f5e4e80a4f33c6dcaff217a9e67a029a16c589a3207378?pictype=scale&amp;from=30013&amp;version=3.3.3.3&amp;fname=back19.jpg&amp;size=750" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/other/Othello/" title="基于MCTS的黑白棋ai"><img class="cover" src="https://picabstract-preview-ftn.weiyun.com/ftn_pic_abs_v3/b99027032749de796e83b372235ebf8a58da2f75f8d3d998e1aba5a93e43517195ed2625b6ba753b5c6c1722684251fc?pictype=scale&amp;from=30013&amp;version=3.3.3.3&amp;fname=back18.jpg&amp;size=750" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">基于MCTS的黑白棋ai</div></div></a></div><div class="next-post pull-right"><a href="/post/pojie/2022tencentFlag1/" title="小白向—2022腾讯游戏安全初赛分析（上）"><img class="cover" src="https://picabstract-preview-ftn.weiyun.com/ftn_pic_abs_v3/4ba515845bfc27a4c7811ededcbf49cd4d372054d1544d00efb3bf9d1c754b95129e7006549fdcd6ba5ef07b3abb2ea4?pictype=scale&amp;from=30013&amp;version=3.3.3.3&amp;fname=20.png&amp;size=750" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">小白向—2022腾讯游戏安全初赛分析（上）</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/fontEnd/changeMiniApp/" title="自定义修改微信小程序"><img class="cover" src="https://picabstract-preview-ftn.weiyun.com/ftn_pic_abs_v3/a19ca102bee298a75056711c2a14c56836df602d9eb2e706108be2557a47df2ebad7d4645c1c9112d980c07e94854ec8?pictype=scale&from=30013&version=3.3.3.3&fname=back11.png&size=750" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-16</div><div class="title">自定义修改微信小程序</div></div></a></div><div><a href="/post/pojie/2022tencentFlag1/" title="小白向—2022腾讯游戏安全初赛分析（上）"><img class="cover" src="https://picabstract-preview-ftn.weiyun.com/ftn_pic_abs_v3/4ba515845bfc27a4c7811ededcbf49cd4d372054d1544d00efb3bf9d1c754b95129e7006549fdcd6ba5ef07b3abb2ea4?pictype=scale&from=30013&version=3.3.3.3&fname=20.png&size=750" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-28</div><div class="title">小白向—2022腾讯游戏安全初赛分析（上）</div></div></a></div><div><a href="/post/pojie/2022tencentFlag2/" title="小白向—2022腾讯游戏安全初赛分析（下）"><img class="cover" src="https://picabstract-preview-ftn.weiyun.com/ftn_pic_abs_v3/ee2a6e233014bcca2568388bf989be471dfad30558e122c71777a3cc5066fb81a078ffd951f5bb5039d7ccf53864558e?pictype=scale&from=30013&version=3.3.3.3&fname=back21.png&size=750" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-29</div><div class="title">小白向—2022腾讯游戏安全初赛分析（下）</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E5%85%B7"><span class="toc-number">1.</span> <span class="toc-text">准备工具</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">2.</span> <span class="toc-text">参考</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">具体过程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%89%BE%E5%88%B0%E4%B8%80%E4%B8%AA%E5%88%87%E5%85%A5%E7%82%B9"><span class="toc-number">3.1.</span> <span class="toc-text">1. 找到一个切入点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%9F%BA%E4%BA%8E%E5%88%87%E5%85%A5%E7%82%B9%E5%88%86%E6%9E%90"><span class="toc-number">3.2.</span> <span class="toc-text">2.基于切入点分析</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Zency</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">在看吗？在看的话mua你一下 ♥</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="iconfont icon-augmented-reality"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="iconfont icon-zhouyejiaoti"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="iconfont icon-augmented-reality"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="iconfont icon-gear"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="iconfont icon-gear"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="iconfont icon-up-arrow"></i></button><button id="go-down" type="button" title="直达底部" onclick="btf.scrollToDest(document.body.scrollHeight, 500)"><i class="iconfont icon-yellow-team"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><canvas id="universe"></canvas><script defer src="/asset/js/cursor.js"></script><script defer src="/asset/js/universe.js"></script><script defer src="/asset/js/console.js"></script><script async src="/asset/js/fps.js"></script><script async src="/asset/js/title.js"></script><script async src="/asset/js/click-heart.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!-- hexo injector body_end start --><div class="js-pjax"><script async="async">var arr = document.getElementsByClassName('recent-post-item');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '1s');
+    arr[i].setAttribute('data-wow-delay', '200ms');
+    arr[i].setAttribute('data-wow-offset', '100');
+    arr[i].setAttribute('data-wow-iteration', '1');
+  }</script><script async="async">var arr = document.getElementsByClassName('card-widget');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '');
+    arr[i].setAttribute('data-wow-delay', '');
+    arr[i].setAttribute('data-wow-offset', '');
+    arr[i].setAttribute('data-wow-iteration', '');
+  }</script></div><script defer src="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/wow.min.js"></script><script defer src="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/wow_init.js"></script><!-- hexo injector body_end end --></body></html>
